@@ -1,0 +1,55 @@
+package esa.Project.Entities;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import java.sql.Date;
+import java.sql.Time;
+
+@Entity
+@Table(name = "pomiar")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Pomiar {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(generator = "sequence-generator")
+    @GenericGenerator(
+            name = "sequence-generator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "pomiar_sequence"),
+                    @Parameter(name = "initial_value", value = "1"),
+                    @Parameter(name = "increment_size", value = "1")
+            }
+    )
+    private int id;
+    @Column(name = "data")
+    private Date date;
+    @Column(name = "godzina")
+    private Time time;
+    @Column(name = "temperatura")
+    private float temperature;
+    @Column(name = "wilgotnosc")
+    private float humidity;
+    @Column(name = "pm_25")
+    private float pm25;
+    @Column(name = "pm_10")
+    private float pm10;
+    @ManyToOne
+    @JoinColumn(name="punkt_pomiarowy_id", nullable = true)
+    private PunktPomiarowy punktPomiarowy;
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(date).append("").append(punktPomiarowy.getId()).append(" ").append(punktPomiarowy.getCity());
+        return sb.toString();
+    }
+}
