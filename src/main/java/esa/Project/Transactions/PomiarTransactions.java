@@ -79,7 +79,7 @@ public class PomiarTransactions {
         return all;
     }
 
-    public static void addPomiar(Date date, Time time, float temperature, float humidity, float pm25, float pm10, PunktPomiarowy punktPomiarowy){
+    public static void addPomiar(Date date, Time time, float temperature, float humidity, float pressure, float pm25, float pm10, PunktPomiarowy punktPomiarowy){
         Session session = SessionConfig.session;
         session.beginTransaction();
         Pomiar pomiar = new Pomiar();
@@ -87,12 +87,30 @@ public class PomiarTransactions {
         pomiar.setTime(time);
         pomiar.setTemperature(temperature);
         pomiar.setHumidity(humidity);
+        pomiar.setPressure(pressure);
         pomiar.setPm10(pm10);
         pomiar.setPm25(pm25);
         pomiar.setPunktPomiarowy(punktPomiarowy);
+        PunktPomiarowyTransactions.addPunktIfNotExists(punktPomiarowy);
+        //TODO nie ma takiej lokalizacji
         System.out.println(pomiar.getPunktPomiarowy());
         System.out.println(pomiar.getPunktPomiarowy().getId());
         session.save(pomiar);
         session.getTransaction().commit();
+    }
+
+    public static void addPomiar(Pomiar pomiar){
+        Session session = SessionConfig.session;
+        session.beginTransaction();
+        PunktPomiarowyTransactions.addPunktIfNotExists(pomiar.getPunktPomiarowy());
+        session.save(pomiar);
+        session.getTransaction().commit();
+    }
+
+
+    public static void addManyPomiar(Pomiar[] measData){
+        for(Pomiar meas : measData){
+            addPomiar(meas);
+        }
     }
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.w3c.dom.html.HTMLImageElement;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -38,13 +39,23 @@ public class Pomiar {
     private float temperature;
     @Column(name = "wilgotnosc")
     private float humidity;
+    @Column(name = "cisnienie")
+    private float pressure;
     @Column(name = "pm_25")
     private float pm25;
     @Column(name = "pm_10")
     private float pm10;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="punkt_pomiarowy_id", nullable = true)
     private PunktPomiarowy punktPomiarowy;
+
+    public Pomiar(float temperature, float humidity, float pressure, float pm25, float pm10){
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        this.pm25 = pm25;
+        this.pm10 = pm10;
+    }
 
     @Override
     public String toString() {

@@ -46,6 +46,15 @@ public class PunktPomiarowy {
     @Column(name = "dlugosc")
     private float longitude;
 
+    public PunktPomiarowy(String city, String street, String zipCode, String schoolName, float latitude, float longitude){
+        this.city = city;
+        this.street = street;
+        this.zipCode = zipCode;
+        this.schoolName = schoolName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

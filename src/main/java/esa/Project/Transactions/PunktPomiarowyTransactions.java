@@ -57,4 +57,8 @@ public class PunktPomiarowyTransactions {
         session.save(PunktPomiarowy);
         session.getTransaction().commit();
     }
+
+    public static void addPunktIfNotExists(PunktPomiarowy station){
+        //TODO uzupelnic
+    }
 }
