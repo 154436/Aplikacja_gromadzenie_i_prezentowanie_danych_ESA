@@ -45,7 +45,7 @@ public class Pomiar {
     private float pm25;
     @Column(name = "pm_10")
     private float pm10;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="punkt_pomiarowy_id", nullable = true)
     private PunktPomiarowy punktPomiarowy;
 

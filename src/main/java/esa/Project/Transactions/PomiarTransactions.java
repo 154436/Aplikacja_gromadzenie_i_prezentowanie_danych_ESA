@@ -101,8 +101,8 @@ public class PomiarTransactions {
 
     public static void addPomiar(Pomiar pomiar){
         Session session = SessionConfig.session;
+        pomiar.setPunktPomiarowy(PunktPomiarowyTransactions.addPunktIfNotExists(pomiar.getPunktPomiarowy()));
         session.beginTransaction();
-        PunktPomiarowyTransactions.addPunktIfNotExists(pomiar.getPunktPomiarowy());
         session.save(pomiar);
         session.getTransaction().commit();
     }
