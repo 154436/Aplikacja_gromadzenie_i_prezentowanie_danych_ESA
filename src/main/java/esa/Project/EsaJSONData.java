@@ -7,6 +7,8 @@ import esa.Project.Transactions.PomiarTransactions;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -18,7 +20,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-
+@Component
 public class EsaJSONData {
     private static String uriString = "https://public-esa.ose.gov.pl/api/v1/smog";
     private static URL url;
@@ -32,7 +34,7 @@ public class EsaJSONData {
             e.printStackTrace();
         }
     }
-
+    @Scheduled(fixedRate = 300000)
     public static void getJson() throws IOException {
         String json = IOUtils.toString(url, Charset.forName("UTF-8"));
         json = json.substring(14, json.length());
