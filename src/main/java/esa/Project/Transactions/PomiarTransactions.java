@@ -113,4 +113,29 @@ public class PomiarTransactions {
             addPomiar(meas);
         }
     }
+
+    public static List<Pomiar> getAllPomiarCityById(int cityId) {
+        Session session = SessionConfig.session;
+        PunktPomiarowy station = PunktPomiarowyTransactions.getPunktPomiarowyById(cityId);
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Pomiar> cq = cb.createQuery(Pomiar.class);
+        Root<Pomiar> rootEntry = cq.from(Pomiar.class);
+        CriteriaQuery<Pomiar> pomiarById = cq.select(rootEntry).where(cb.equal(rootEntry.get("punktPomiarowy"), station));;
+        Query<Pomiar> query = session.createQuery(pomiarById);
+        return query.getResultList();
+    }
+
+    public static List<Pomiar> getAllPomiarCityPeriodById(int cityId, Date start, Date end) {
+        PunktPomiarowy station = PunktPomiarowyTransactions.getPunktPomiarowyById(cityId);
+        Session session = SessionConfig.session;
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Pomiar> cq = cb.createQuery(Pomiar.class);
+        Root<Pomiar> rootEntry = cq.from(Pomiar.class);
+        Predicate[] predicates = new Predicate[2];
+        predicates[0] = cb.between(rootEntry.get("date"), start, end);
+        predicates[1] = cb.equal(rootEntry.get("punktPomiarowy"), station);
+        CriteriaQuery<Pomiar> pomiarById = cq.select(rootEntry).where(predicates);
+        Query<Pomiar> query = session.createQuery(pomiarById);
+        return query.getResultList();
+    }
 }

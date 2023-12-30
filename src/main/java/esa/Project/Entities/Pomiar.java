@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.w3c.dom.html.HTMLImageElement;
 
 import java.sql.Date;
 import java.sql.Time;
