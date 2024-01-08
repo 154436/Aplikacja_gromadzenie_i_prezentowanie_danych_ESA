@@ -24,19 +24,24 @@ public class APIController {
     @PostMapping("/api/greet")
     @ResponseBody
     public String greet(@RequestBody String name) {
-        return "Hello, " + name + "!";
+        JSONObject result = new JSONObject("{Hello: " + name + "}");
+        return result.toString();
     }
 
     @GetMapping("/api/pomiary")
     @ResponseBody
     public String getAllPomiary() {
-        return JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiar());
+        String resultStr = JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiar());
+        System.out.println(resultStr.substring(129380, 129410));
+        JSONObject result = new JSONObject(resultStr);
+        return result.toString();
     }
 
     @GetMapping("/api/lokalizacje")
     @ResponseBody
     public String getAllPunktyPomiarowe() {
-        return JSONMapperPunkt.getJSON(PunktPomiarowyTransactions.getAllPunktPomiarowy());
+        JSONObject result = new JSONObject(JSONMapperPunkt.getJSON(PunktPomiarowyTransactions.getAllPunktPomiarowy()));
+        return result.toString();
     }
 
     @PostMapping("/api/miasto")
@@ -44,7 +49,8 @@ public class APIController {
     public String getPomiaryPunkt(@RequestBody String city) {
         JSONObject ob = new JSONObject(city);
         String cityName = ob.get("city").toString().trim();
-        return JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarCity(cityName));
+        JSONObject result = new JSONObject(JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarCity(cityName)));
+        return result.toString();
     }
 
     @PostMapping("/api/punkt-id")
@@ -54,10 +60,12 @@ public class APIController {
         String cityId = ob.get("cityId").toString().trim();
         try{
             int id = Integer.parseInt(cityId);
-            return JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarCityById(id));
+            JSONObject result = new JSONObject(JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarCityById(id)));
+            return result.toString();
         }
         catch(NumberFormatException exc){
-            return "Nieprawidlowy format danych";
+            JSONObject result = new JSONObject("Nieprawidlowy format danych");
+            return result.toString();
         }
     }
 
@@ -69,7 +77,10 @@ public class APIController {
         String endDate = ob.get("endDate").toString().trim();
         Date start = Date.valueOf(startDate);
         Date end = Date.valueOf(endDate);
-        return JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarPeriod(start, end));
+        String resultStr = JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarPeriod(start, end));
+        System.out.println(resultStr);
+        JSONObject result = new JSONObject(resultStr);
+        return result.toString();
     }
 
     @PostMapping("/api/miasto-data")
@@ -81,7 +92,8 @@ public class APIController {
         String endDate = ob.get("endDate").toString().trim();
         Date start = Date.valueOf(startDate);
         Date end = Date.valueOf(endDate);
-        return JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarCityPeriod(cityName, start, end));
+        JSONObject result = new JSONObject(JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarCityPeriod(cityName, start, end)));
+        return result.toString();
     }
 
     @PostMapping("/api/punkt-id-data")
@@ -95,9 +107,11 @@ public class APIController {
             Date start = Date.valueOf(startDate);
             Date end = Date.valueOf(endDate);
             int id = Integer.parseInt(cityId);
-            return JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarCityPeriodById(id, start, end));
+            JSONObject result = new JSONObject(JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiarCityPeriodById(id, start, end)));
+            return result.toString();
         }catch(NumberFormatException exc){
-            return "Nieprawidlowy format danych";
+            JSONObject result = new JSONObject("Nieprawidlowy format danych");
+            return result.toString();
         }
     }
 

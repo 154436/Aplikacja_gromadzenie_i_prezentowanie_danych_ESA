@@ -7,18 +7,20 @@ import java.util.List;
 
 public class JSONMapperPomiar {
     static public String getJSON(List<Pomiar> data){
-        StringBuilder json = new StringBuilder("[");
+        StringBuilder json = new StringBuilder("{pomiary: [");
         for(Pomiar pomiar : data){
-            json.append(getRow(pomiar));
+            json.append(getRow(pomiar)).append(",");
         }
-        return json.append("]").toString();
+        json.deleteCharAt(json.length()-1);
+        return json.append("]}").toString();
     }
 
     static private StringBuilder getRow(Pomiar punkt){
         StringBuilder row = new StringBuilder("{");
         row.append("id: ").append(punkt.getId()).append(",");
         row.append("date: ").append(punkt.getDate()).append(",");
-        row.append("time: ").append(punkt.getTime()).append(",");
+        //TODO : w godzinie sypie json
+        row.append("time: ").append(punkt.getTime().toString().replace(':','-')).append(",");
         row.append("temperature: ").append(punkt.getTemperature()).append(",");
         row.append("pressure: ").append(punkt.getPressure()).append(",");
         row.append("humidity: ").append(punkt.getHumidity()).append(",");
