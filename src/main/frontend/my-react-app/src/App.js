@@ -1,14 +1,34 @@
 import './App.css';
 import React, { useState } from 'react';
+import {useEffect} from 'react';
+import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Chart from './Chart';
 const App = () => {
+    useEffect(() => {
+        fetchFirstData();
+    }, []);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [responseData, setResponseData] = useState(null);
+    const [startData, setStartData] = useState(null);
 
-
+    const fetchFirstData = () => {
+        const dataToSend = {
+            cityId: 1595,
+            startDate: "2023-12-10",
+            endDate: "2024-01-08",
+        };
+        axios.post('http://localhost:8080/api/punkt-id-data', dataToSend)
+            .then(response => {
+                console.log(response.data);
+                setStartData(response.data);
+            })
+            .catch(error => {
+                console.error('Błąd podczas wysyłania żądania POST:', error);
+            });
+    };
     const handleStartDateChange = (date) => {
         setStartDate(date);
     };
@@ -18,13 +38,10 @@ const App = () => {
     };
 
     const handleSendData = () => {
-        // Przygotuj dane do wysłania
         const dataToSend = {
             startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
         };
-
-        // Wysyłka danych do API
         fetch('http://localhost:8080/api/greet', {
             method: 'POST',
             headers: {
@@ -41,12 +58,10 @@ const App = () => {
             });
     };
     const handleGetRequest = () => {
-        // Wysyłka żądania GET do API
         fetch('http://localhost:8080/api/pomiary')
             .then(response => response.json())
             .then(data => {
                 console.log('Odpowiedź od serwera (GET):', data);
-                // Zapisz otrzymane dane, jeśli to potrzebne
                 setResponseData(data);
             })
             .catch(error => {
@@ -68,10 +83,37 @@ const App = () => {
                   Przejdź do API ESA
               </a>
           </header>
+          <div>
+              <h2>Ostatnie dane dla lokalizacji: </h2>
+              {startData ? (
+                  <pre>  Miasto pomiaru {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].punkt_pomiarowy.city, null, 2) + "\n"}
+                      Ulica {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].punkt_pomiarowy.street, null, 2) + "\n"}
+                      Nazwa szkoły {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].punkt_pomiarowy.schoolName, null, 2) + "\n"}
+                      Kod pocztowy {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].punkt_pomiarowy.zipcode, null, 2) + "\n"}
+                      Szerokość geograficzna {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].punkt_pomiarowy.latitude, null, 2) + "\n"}
+                      Długość geograficzna {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].punkt_pomiarowy.longitude, null, 2) + "\n"}
+                  </pre>
+              ) : (
+                  <p>Nie można odczytać lokalizacji</p>
+              )}
+              <h3>Ostatnie pomiary: </h3>
+              {startData ? (
+
+                  <pre>  Data pomiaru {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].date, null, 2) + "\n"}
+                      Czas pomiaru {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].time, null, 2) + "\n"}
+                      PM2.5 {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].pm25, null, 2) + "\n"}
+                      PM10 {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].pm10, null, 2) + "\n"}
+                      Temperatura {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].temperature, null, 2) + "\n"}
+                      Wilgotność {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].humidity, null, 2) + "\n"}
+                      Ciśnienie {JSON.stringify(startData.pomiary[startData.pomiary.length - 1].pressure, null, 2) + "\n"}
+                  </pre>
+              ) : (
+                  <p>Brak danych do wyświetlenia</p>
+              )}
+          </div>
           <div className="App">
-              <h1>Moja Aplikacja React z Wykresem</h1>
+          <h1>Stężenie pyłu PM2.5</h1>
               <Chart/>
-              {/* Dodaj resztę kodu Twojej aplikacji */}
           </div>
           <div>
               <h3>Wybierz datę początkową:</h3>

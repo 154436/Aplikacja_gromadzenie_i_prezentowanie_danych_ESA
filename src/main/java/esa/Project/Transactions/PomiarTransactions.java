@@ -126,8 +126,10 @@ public class PomiarTransactions {
     }
 
     public static List<Pomiar> getAllPomiarCityPeriodById(int cityId, Date start, Date end) {
-        PunktPomiarowy station = PunktPomiarowyTransactions.getPunktPomiarowyById(cityId);
+
+
         Session session = SessionConfig.session;
+        PunktPomiarowy station = PunktPomiarowyTransactions.getPunktPomiarowyById(cityId);
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Pomiar> cq = cb.createQuery(Pomiar.class);
         Root<Pomiar> rootEntry = cq.from(Pomiar.class);
