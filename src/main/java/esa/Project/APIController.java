@@ -32,7 +32,6 @@ public class APIController {
     @ResponseBody
     public String getAllPomiary() {
         String resultStr = JSONMapperPomiar.getJSON(PomiarTransactions.getAllPomiar());
-        System.out.println(resultStr.substring(129380, 129410));
         JSONObject result = new JSONObject(resultStr);
         return result.toString();
     }
@@ -40,7 +39,9 @@ public class APIController {
     @GetMapping("/api/lokalizacje")
     @ResponseBody
     public String getAllPunktyPomiarowe() {
-        JSONObject result = new JSONObject(JSONMapperPunkt.getJSON(PunktPomiarowyTransactions.getAllPunktPomiarowy()));
+        String resultStr = JSONMapperPunkt.getJSON(PunktPomiarowyTransactions.getAllPunktPomiarowy());
+        JSONObject result = new JSONObject(resultStr);
+
         return result.toString();
     }
 
