@@ -4,7 +4,12 @@ import {useEffect} from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Chart from './Chart';
+import { Line } from 'react-chartjs-2';
+import Chart from "chart.js";
+import { CategoryScale } from "chart.js";
+Chart.register(CategoryScale);
+
+//import Chart from './Chart';
 const App = () => {
     useEffect(() => {
         fetchFirstData();
@@ -68,6 +73,49 @@ const App = () => {
                 console.error('Błąd podczas wysyłania żądania GET:', error);
             });
     };
+    const getLastDataPoint = () => {
+        if (startData && startData.length > 0) {
+            return startData[startData.length - 1];
+        }
+        return null;
+    };
+
+    const lastDataPoint = getLastDataPoint();
+
+    const chartData = {
+        labels: startData ? startData.pomiary.map(item => item.date) : [],
+        datasets: [
+            {
+                label: 'Twoje dane',
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: 'rgba(75,192,192,0.4)',
+                borderColor: 'rgba(75,192,192,1)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: 'rgba(75,192,192,1)',
+                pointBackgroundColor: '#fff',
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+                pointHoverBorderColor: 'rgba(220,220,220,1)',
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data: startData ? startData.pomiary.map(item => item.pm25) : [],
+            },
+        ],
+    };
+    const chartOptions = {
+        scales: {
+            xAxes: [{
+                type: 'category',
+                labels: startData ? startData.pomiary.map(item => item.date) : [],
+            }],
+        },
+    };
   return (
       <div className="App">
           <header className="App-header">
@@ -112,8 +160,16 @@ const App = () => {
               )}
           </div>
           <div className="App">
-          <h1>Stężenie pyłu PM2.5</h1>
-              <Chart/>
+
+              {startData ? (
+                  <div>
+                      <h1>Stężenie pyłu PM2.5</h1>
+                      <h3>Wykres</h3>
+                      <Line data={chartData} />
+                  </div>
+              ) : (
+                  <p>Brak danych do wyświetlenia</p>
+              )}
           </div>
           <div>
               <h3>Wybierz datę początkową:</h3>

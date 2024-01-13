@@ -20,7 +20,7 @@ public class JSONMapperPunkt {
         StringBuilder row = new StringBuilder("{");
         row.append("id: ").append(punkt.getId()).append(",");
         row.append("city: ").append(punkt.getCity() != " " ? punkt.getCity() : "null").append(",");
-        row.append("street: ").append(!punkt.getStreet().equals(" ") ? punkt.getStreet() : "null").append(",");
+        row.append("street: ").append(!punkt.getStreet().equals("") ? punkt.getStreet() : "null").append(",");
         row.append("schoolName: ").append(punkt.getSchoolName() != " " ? punkt.getSchoolName().replace('"', '*').replace(',','+').replace(",,", "*").replace('/', 'a') : "null").append(",");
         row.append("zipcode: ").append(punkt.getZipCode() != " " ? punkt.getZipCode() : "null").append(",");
         row.append("latitude: ").append(punkt.getLatitude()).append(",");
